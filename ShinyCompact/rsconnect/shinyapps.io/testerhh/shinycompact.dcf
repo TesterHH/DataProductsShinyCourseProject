@@ -1,0 +1,10 @@
+name: shinycompact
+title:
+username:
+account: testerhh
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 836616
+bundleId: 1984728
+url: https://testerhh.shinyapps.io/shinycompact/
+when: 1554316457.21387

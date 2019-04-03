@@ -62,5 +62,5 @@ server<-shinyServer(
 ```
 ## Example of Shiny application run
 ```{r screensh, screenshot.opts = list(delay = 15), echo=TRUE}
-knitr::include_app("https://testerhh.shinyapps.io/courseproj/", height = 2)
+knitr::include_app("https://testerhh.shinyapps.io/shinycompact/")
 ```
