@@ -1,0 +1,52 @@
+---
+title: "Shiny app Presentation"
+author: "Evgeny Gorelov"
+date: "4/3/2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+   mtcars$am<-as.factor(as.character(mtcars$am))
+    levels(mtcars$am)[levels(mtcars$am)=="0"] <- "Automatic"
+    levels(mtcars$am)[levels(mtcars$am)=="1"] <- "Manual"
+```
+
+## The problem
+
+Studying the **mtcars** dataset using the linear fit model,
+illustrate, which variables of the data set should be included into the model,
+in order to explain fuel consumption differrence between cars wit automatic and manual transmittion.
+
+In order to illustrate the model selection procedure a Shiny application has been constructed.
+
+## Data set information
+The **mtcars** data set is extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).
+The data set includes data for **32** cars with **11** variables:
+
+```{r}
+str(mtcars)
+```
+
+## Application workflow
+- Selecting attitional predictor from the list using radiobuttons
+- Build additional linear *fit1* with two predictors
+- Compare it to basis *fit0* wuth single predictor (type of transmission) 
+- Plot obtained linear fit versus additional predictor 
+- Report the *p-value* associated with selected additional predictor
+
+## Example of application work
+
+The application behavior with Gross horsepower (**hp**) additional predictor selected is shown below:
+
+```{r, fig.height = 3}
+   fit0<-lm(mpg~am, data=mtcars)
+   fit1<-lm(mpg~am+hp, data=mtcars)
+
+   anova(fit0,fit1)$Pr[2]
+   
+   ggplot(mtcars, aes(hp, mpg, shape=am, colour=am, fill=am))+geom_point()+geom_smooth(method="lm")
+```
+
+The application needs the **ggplot2** package to be installed.

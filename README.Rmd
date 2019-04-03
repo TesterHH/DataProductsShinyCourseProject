@@ -1,0 +1,59 @@
+---
+title: "Documentation on Shiny course project application"
+author: "Evgeny Gorelov"
+date: "4/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+   mtcars$am<-as.factor(as.character(mtcars$am))
+    levels(mtcars$am)[levels(mtcars$am)=="0"] <- "Automatic"
+    levels(mtcars$am)[levels(mtcars$am)=="1"] <- "Manual"
+```
+
+## Data set information
+The **mtcars** data set is extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).
+The data set includes data for **32** cars with **11** variables:
+
+column | variable | explanation
+---|---|---
+[, 1]|	mpg	|Miles/(US) gallon
+[, 2]|	cyl	|Number of cylinders
+[, 3]|	disp|	Displacement (cu.in.)
+[, 4]|	hp|	Gross horsepower
+[, 5]|	drat|	Rear axle ratio
+[, 6]|	wt|	Weight (1000 lbs)
+[, 7]|	qsec|	1/4 mile time
+[, 8]|	vs|	Engine (0 = V-shaped, 1 = straight)
+[, 9]|	am|	Transmission (0 = automatic, 1 = manual)
+[,10]|	gear|	Number of forward gears
+[,11]|	carb|	Number of carburetors
+
+## The problem
+Studiing the **mtcars** dataset using the linear fit model,
+illustrate, which variables of the data set should be included into the model,
+in order to explain fuel consumption differrence between cars wit automatic and manual transmittion.
+
+## Method
+
+Selecting attitional predictor from the list using radiobuttons,
+build additional linear *fit1* with two predictors, compare it to basis *fit0*
+wuth single predictor (type of transmission), and plot obtained linear fit versus
+additional predictor. The *p-value*, associated with selected additional predictor
+is also reported, giving an information of significance of the selected predictor 
+to explanation of fuel consumption difference of cars from the data set.
+
+The simplified chunk of code, illustrating the application behavior with Gross horsepower (**hp**) additional predictor selected is shown below:
+
+```{r}
+   fit0<-lm(mpg~am, data=mtcars)
+   fit1<-lm(mpg~am+hp, data=mtcars)
+
+   anova(fit0,fit1)$Pr[2]
+   
+   ggplot(mtcars, aes(hp, mpg, shape=am, colour=am, fill=am))+geom_point()+geom_smooth(method="lm")
+```
+
+The application needs the **ggplot2** package to be installed.
