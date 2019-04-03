@@ -3,12 +3,17 @@ title: "Shiny app Presentation"
 author: "Evgeny Gorelov"
 date: "4/3/2019"
 output: ioslides_presentation
+runtime: shiny
+#runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(ggplot2)
-   mtcars$am<-as.factor(as.character(mtcars$am))
+library(tidyr)
+library(shiny)
+data(mtcars)
+    mtcars$am<-as.factor(as.character(mtcars$am))
     levels(mtcars$am)[levels(mtcars$am)=="0"] <- "Automatic"
     levels(mtcars$am)[levels(mtcars$am)=="1"] <- "Manual"
 ```
@@ -21,12 +26,11 @@ in order to explain fuel consumption differrence between cars wit automatic and 
 
 In order to illustrate the model selection procedure a Shiny application has been constructed.
 
-## Data set information
 The **mtcars** data set is extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).
 The data set includes data for **32** cars with **11** variables:
 
 ```{r}
-str(mtcars)
+names(mtcars)
 ```
 
 ## Application workflow
@@ -36,17 +40,50 @@ str(mtcars)
 - Plot obtained linear fit versus additional predictor 
 - Report the *p-value* associated with selected additional predictor
 
-## Example of application work
-
-The application behavior with Gross horsepower (**hp**) additional predictor selected is shown below:
-
-```{r, fig.height = 3}
-   fit0<-lm(mpg~am, data=mtcars)
-   fit1<-lm(mpg~am+hp, data=mtcars)
-
-   anova(fit0,fit1)$Pr[2]
-   
-   ggplot(mtcars, aes(hp, mpg, shape=am, colour=am, fill=am))+geom_point()+geom_smooth(method="lm")
+## Server part of the application
+```{r server, echo=TRUE, context="server"}
+server<-shinyServer(  
+  function(input, output) { 
+    mtcars$am<-as.factor(as.character(mtcars$am))
+    levels(mtcars$am)[levels(mtcars$am)=="0"] <- "Automatic"
+    levels(mtcars$am)[levels(mtcars$am)=="1"] <- "Manual"
+    fit0<-lm(mpg~am, data=mtcars)
+    output$myPlot <- renderPlot({
+      ff<-as.formula(paste("mpg~am+",input$secondVar, collapse=""))
+      g<-ggplot(mtcars, aes(get(input$secondVar), mpg, shape=am, 
+                colour=am, fill=am))+geom_point()
+      g+labs(x=input$secondVar)+geom_smooth(method="lm")})
+    output$myText<-renderText({
+      ff<-as.formula(paste("mpg~am+",input$secondVar, collapse=""))
+      fit1<-lm(ff, data=mtcars)
+      paste(as.character(anova(fit0,fit1)$Pr[2]))})
+    }
+)
 ```
+## Working instance of Shiny application
 
-The application needs the **ggplot2** package to be installed.
+```{r}
+ui<-shinyUI(pageWithSidebar(  
+  headerPanel(""),  
+  sidebarPanel(    
+    radioButtons("secondVar", "Add predictor:",
+                 c("Num. cylinders" = "cyl",
+                   "Displacement" = "disp",
+                   "Horsepower" = "hp",
+                   "Rear ax. ratio" = "drat",
+                   "Weight" = "wt",
+                   "1/4 m. time" = "qsec",
+                   "Engine type" = "vs",
+                   "Num. gears" = "gear",
+                   "Num. carburetors" = "carb"
+                  ), selected="hp")),
+  mainPanel(    
+    plotOutput('myPlot', width = "80%"),
+    p('p-value, for additional predictor:'),
+    textOutput('myText')
+  )
+))
+```
+```{r run, echo=TRUE}
+shinyApp(ui, server)
+```

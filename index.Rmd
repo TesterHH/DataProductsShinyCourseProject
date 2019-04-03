@@ -2,14 +2,16 @@
 title: "Shiny app Presentation"
 author: "Evgeny Gorelov"
 date: "4/3/2019"
-runtime: shiny
 output: ioslides_presentation
+#runtime: shiny
+#runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(ggplot2)
 library(tidyr)
+library(shiny)
 data(mtcars)
     mtcars$am<-as.factor(as.character(mtcars$am))
     levels(mtcars$am)[levels(mtcars$am)=="0"] <- "Automatic"
@@ -39,7 +41,7 @@ names(mtcars)
 - Report the *p-value* associated with selected additional predictor
 
 ## Server part of the application
-```{r server, echo=TRUE}
+```{r server, echo=TRUE, context="server"}
 server<-shinyServer(  
   function(input, output) { 
     mtcars$am<-as.factor(as.character(mtcars$am))
@@ -58,29 +60,7 @@ server<-shinyServer(
     }
 )
 ```
-## Working instance of Shiny application
-
-```{r}
-ui<-shinyUI(pageWithSidebar(  
-  headerPanel(""),  
-  sidebarPanel(    
-    radioButtons("secondVar", "Add predictor:",
-                 c("Num. cylinders" = "cyl",
-                   "Displacement" = "disp",
-                   "Horsepower" = "hp",
-                   "Rear ax. ratio" = "drat",
-                   "Weight" = "wt",
-                   "1/4 m. time" = "qsec",
-                   "Engine type" = "vs",
-                   "Num. gears" = "gear",
-                   "Num. carburetors" = "carb"
-                  ))),
-  mainPanel(    
-    plotOutput('myPlot', width = "100%"),
-    p('p-value, for additional predictor:'),
-    textOutput('myText')
-  )
-))
-
-shinyApp(ui, server)
+## Example of Shiny application run
+```{r screensh, screenshot.opts = list(delay = 15), echo=TRUE}
+knitr::include_app("https://testerhh.shinyapps.io/courseproj/", height = 2)
 ```
