@@ -267,7 +267,7 @@ $(document).ready(function () {
 </div>
 <div id="method" class="section level2">
 <h2>Method</h2>
-<p>Selecting attitional predictor from the list using radiobuttons, build additional linear <em>fit1</em> with two predictors, compare it to basis <em>fit0</em> wuth single predictor (type of transmission), and plot obtained linear fit versus additional predictor. The <em>p-value</em>, associated with selected additional predictor is also reported, giving an information of significance of the selected predictor to explanation of fuel consumption difference of cars from the data set.</p>
+<p>Selecting attitional predictor from the list using radiobuttons, build additional linear <em>fit1</em> with two predictors, compare it to basis <em>fit0</em> with single predictor (type of transmission), and plot obtained linear fit versus additional predictor. The <em>p-value</em>, associated with selected additional predictor is also reported, giving an information of significance of the selected predictor to explanation of fuel consumption difference of cars from the data set.</p>
 <p>The simplified chunk of code, illustrating the application behavior with Gross horsepower (<strong>hp</strong>) additional predictor selected is shown below:</p>
 <pre class="r"><code>   fit0&lt;-lm(mpg~am, data=mtcars)
    fit1&lt;-lm(mpg~am+hp, data=mtcars)
