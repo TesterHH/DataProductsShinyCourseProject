@@ -60,7 +60,7 @@ server<-shinyServer(
     }
 )
 ```
-## Example of Shiny application run
+## Working instance of Shiny application
 ```{r screensh, screenshot.opts = list(delay = 15), echo=TRUE}
 knitr::include_app("https://testerhh.shinyapps.io/shinycompact/")
 ```
